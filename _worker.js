@@ -18,6 +18,11 @@ export default {
       return new Response("Database binding 'db' is missing.", { status: 500 });
     }
 
+    if (path === '/' || path === '/index.html') {
+      // 302 临时重定向到用户登录页面
+      return Response.redirect(`${url.origin}/user/login.html`, 302);
+    }
+
     // 静态资源与页面路由交由 Pages 处理
     if (path.startsWith('/assets/') || path.endsWith('.html')) {
       return env.ASSETS.fetch(request);
