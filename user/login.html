@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>用户登录 - 接码系统</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        body { background-color: #f4f6f9; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #login-wrapper { display: flex; flex-direction: column; width: 100%; max-width: 400px; padding: 15px; }
+        .nav-tabs { margin-bottom: 15px; border-bottom: none; }
+        .nav-tabs>li>a { color: #555; border-radius: 4px; }
+        .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover { background-color: #337ab7; color: white; border: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-wrapper">
+    <div class="login-container">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li role="presentation" class="active"><a href="#login" aria-controls="login" role="tab" data-toggle="tab">用户登录</a></li>
+            <li role="presentation"><a href="#register" aria-controls="register" role="tab" data-toggle="tab">注册账号</a></li>
+        </ul>
+        
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="login">
+                <form class="login-form" id="user-login-form">
+                    <div class="form-group"><input type="text" id="login-username" class="form-control" placeholder="请输入用户名" required></div>
+                    <div class="form-group"><input type="password" id="login-password" class="form-control" placeholder="请输入密码" required></div>
+                    <button type="submit" class="xyrj-primary xyrj-login">登录</button>
+                </form>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="register">
+                <form class="login-form" id="user-register-form">
+                    <div class="form-group"><input type="text" id="reg-username" class="form-control" placeholder="设置用户名" required></div>
+                    <div class="form-group"><input type="password" id="reg-password" class="form-control" placeholder="设置密码" required></div>
+                    <button type="submit" class="xyrj-primary xyrj-login" style="background-color: #5cb85c;">注册并登录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script>
+    $('#user-login-form').on('submit', function(e) {
+        e.preventDefault();
+        // 模拟登录成功，实际应对接后端
+        localStorage.setItem('userToken', 'user_logged_in');
+        window.location.href = '/user/index.html';
+    });
+
+    $('#user-register-form').on('submit', function(e) {
+        e.preventDefault();
+        alert('注册功能需对接Worker，暂时模拟成功');
+        localStorage.setItem('userToken', 'user_logged_in');
+        window.location.href = '/user/index.html';
+    });
+</script>
+</body>
+</html>
