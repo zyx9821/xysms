@@ -1,0 +1,30 @@
+body {
+    background-color: #f4f6f9;
+}
+
+#login-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    /* 取消依赖 body 的 flex 布局，改用 auto 实现水平居中，15vh 实现垂直下移 */
+    margin: 15vh auto 0 auto; 
+    padding: 15px;
+}
+
+/* 用户登录页的选项卡专属样式 */
+.nav-tabs { 
+    margin-bottom: 15px; 
+    border-bottom: none; 
+}
+.nav-tabs>li>a { 
+    color: #555; 
+    border-radius: 4px; 
+}
+.nav-tabs>li.active>a, 
+.nav-tabs>li.active>a:focus, 
+.nav-tabs>li.active>a:hover { 
+    background-color: #337ab7; 
+    color: white; 
+    border: none; 
+}
