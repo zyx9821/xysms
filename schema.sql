@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS system_settings;
+CREATE TABLE system_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+INSERT INTO system_settings (key, value) VALUES ('ADMIN_USER', 'admin');
+INSERT INTO system_settings (key, value) VALUES ('ADMIN_PASS', '123456');
+INSERT INTO system_settings (key, value) VALUES ('TIMEZONE', 'Asia/Shanghai');
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
