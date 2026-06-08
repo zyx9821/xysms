@@ -1,0 +1,329 @@
+/* --- 登录框样式 --- */
+#login-wrapper {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #f5f5f5;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+.login-container {
+    width: 100%;
+    max-width: 380px;
+    box-sizing: border-box;
+    padding: 40px;
+    background-color: #fff; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px; text-align: center;
+}
+@media only screen and (max-width: 399px) {
+  .login-container {
+    margin: 0 16px; /* 上下0，左右16px */
+  }
+}
+.xyrj-primary {
+    color: #fff;
+    background-color: #409EFF;
+    /* border-color: #2e6da4; */
+}
+.xyrj-primary:hover {
+    color: #fff;
+    background-color: #3390ff;
+}
+.xyrj-login {
+    width: 100%;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.footer-link {
+    margin-top: 16px;
+    text-align: right;
+}
+@media only screen and (max-width: 399px) {
+    .login-container {
+        max-width: calc(100vw - 32px); /* 16px left + 16px right */
+    }
+}
+
+:root {
+    --Maincolor: #409EFF !important;
+    --MaincolorHover: #409EFF !important;
+    --fontSelectedColor: #3390ff !important;
+    --theme-bd: #617eaf;
+    --theme-color: #206be7;
+    --theme-hover: #1162e8;
+    --theme-font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu, Helvetica Neue, Helvetica, Arial, PingFang SC, Hirgino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Source Han Sans CN, sans-serif;
+    --text-color: #333;
+    --text-color-light: #777;
+    --bg-color: #f5f5f5;
+    --widget-bg: #fff;
+    --border-color: #fff;
+}
+
+/* --- 新增：后台左右布局样式 --- */
+body {
+    background-color: #f4f7f6;
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    max-width: 1600px; 
+    margin: 0 auto; 
+}
+
+.admin-sidebar {
+    width: 220px;
+    background-color: #2c3e50; 
+    color: #ecf0f1;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 1px solid #34495e;
+}
+.sidebar-header a {
+    color: #ecf0f1;
+    text-decoration: none;
+}
+
+.admin-sidebar .nav > li > a {
+    color: #bdc3c7; 
+    padding: 15px 20px;
+    border-left: 3px solid transparent;
+}
+
+.admin-sidebar .nav > li > a:hover,
+.admin-sidebar .nav > li > a:focus {
+    background-color: #34495e; 
+    color: #ffffff;
+    outline: none; 
+}
+
+.admin-sidebar .nav > .active > a,
+.admin-sidebar .nav > .active > a:hover,
+.admin-sidebar .nav > .active > a:focus {
+    background-color: #e74c3c;
+    color: #ffffff;
+    border-left: 3px solid #c0392b;
+    outline: none; 
+}
+
+.admin-sidebar .nav > li > a > .fa-fw {
+    margin-right: 10px;
+}
+
+.admin-content {
+    margin-left: 220px; /* 留出侧边栏的宽度 */
+    width: calc(100% - 220px);
+    padding: 20px;
+}
+
+/* --- START: 新增移动端顶栏和遮罩层样式 --- */
+.admin-mobile-header {
+	display: none; /* 默认在PC端隐藏 */
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 50px;
+	background-color: #ffffff;
+	border-bottom: 1px solid #ddd;
+	padding: 0 15px;
+	z-index: 1001; /* 必须高于 admin-content */
+	justify-content: space-between;
+	align-items: center;
+}
+.mobile-logo {
+	height: 39px; /* 限制Logo高度 */
+}
+.mobile-logo a {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	color: #333;
+	font-weight: bold;
+	font-size: 18px;
+	text-decoration: none;
+}
+.mobile-logo img {
+	height: 100%;
+	width: auto;
+	object-fit: contain;
+}
+#mobile-menu-toggle {
+	font-size: 20px;
+	padding: 5px 0px 5px 16px;
+}
+#mobile-menu-toggle.btn.btn-default,
+#mobile-menu-toggle.btn.btn-default:focus,
+#mobile-menu-toggle.btn.btn-default:active,
+#mobile-menu-toggle.btn.btn-default:hover,
+#mobile-menu-toggle.btn.btn-default.focus,
+#mobile-menu-toggle.btn.btn-default.active {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.admin-overlay {
+	display: none; /* 默认隐藏 */
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	z-index: 1001; /* 与顶栏同级，但低于侧边栏 */
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+.admin-overlay.is-visible {
+	display: block;
+	opacity: 1;
+}
+/* --- END: 新增移动端顶栏和遮罩层样式 --- */
+
+.tab-content .container-fluid {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- 新增：分类设置项样式 --- */
+.category-item {
+    margin-bottom: 10px;
+}
+.category-item .input-group-addon {
+    min-width: 50px;
+    text-align: center;
+}
+
+/* --- H2/H3 标题左侧竖线样式 (可禁用版) --- */
+
+/* 1. 为所有 "不带 .no-bar" 的 h2 和 h3 添加相对定位和内边距 */
+.entry-content h2:not(.no-bar),
+.entry-content h3:not(.no-bar) {
+    position: relative;
+    padding-left: 11px; 
+}
+
+/* 2. 为所有 "不带 .no-bar" 的 h2 和 h3 添加竖线 */
+.entry-content h2:not(.no-bar):before,
+.entry-content h3:not(.no-bar):before {
+    position: absolute;
+    content: '';
+    width: 4px;
+    background: #3598db; 
+    top: 0.30em;
+    bottom: 0.30em;
+    left: 0;
+    border-radius: 5px;
+    transition: .4s;
+}
+/* --- START: 新增 800px 响应式布局 --- */
+@media only screen and (max-width: 800px) {
+	/* 1. 显示移动端顶栏 */
+	.admin-mobile-header {
+		display: flex;
+	}
+
+	/* 2. 隐藏PC端侧边栏 (移出屏幕) */
+	.admin-sidebar {
+		position: fixed;
+		left: -220px; /* 侧边栏宽度为 220px */
+		top: 0;
+		height: 100vh; /* 占满全屏高 */
+		z-index: 1002; /* 层级最高，盖住顶栏和遮罩层 */
+		transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		border-right: 1px solid #34495e;
+		box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	}
+
+	/* 3. "is-visible" 类用于滑出侧边栏 */
+	.admin-sidebar.is-visible {
+		left: 0;
+	}
+
+	/* 4. 调整主内容区域 */
+	.admin-content {
+		margin-left: 0; /* 移除左边距 */
+		width: 100%;
+		padding: 5px; /* 重置内边距 */
+		padding-top: 70px; /* 50px顶栏高度 + 20px间距 */
+	}
+
+	/* 5. 缩小内容区的内边距 */
+	.tab-content .container-fluid {
+		padding: 5px;
+	}
+	/* --- START: 新增 - 解决移动端 input-group 溢出问题 --- */
+	
+	/* 1. 强制 input-group 放弃 table 布局，允许换行 */
+	.admin-content .input-group {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	/* 2. 让所有子元素（标签、输入框、按钮）都占满 100% 宽度，实现垂直堆叠 */
+	.admin-content .input-group > .form-control,
+	.admin-content .input-group > .input-group-addon,
+	.admin-content .input-group > .input-group-btn {
+		width: 100% !important; /* 强制100%宽度 */
+		display: block;
+		border-radius: 4px !important; /* 重置所有圆角 */
+		margin-bottom: 5px; /* 增加堆叠间距 */
+	}
+
+	/* 3. 修复 addon 和 btn 丢失的边框 */
+	.admin-content .input-group > .input-group-addon,
+	.admin-content .input-group > .input-group-btn {
+		border: 1px solid #ccc;
+	}
+
+	/* 4. 修复输入框的 z-index 和边框问题 */
+	.admin-content .input-group > .form-control {
+		border: 1px solid #ccc;
+		position: relative;
+		z-index: auto;
+	}
+
+	.admin-content .input-group-btn .btn {
+	    width: 100%;
+	    display: block; 
+	    margin-bottom: 5px; /* <-- 增加间距 */
+	}
+	/* 最后一个按钮不需要间距 */
+	.admin-content .input-group-btn .btn:last-child {
+	    margin-bottom: 0;
+	}
+
+	/* 6. 最后一个元素不需要底部边距 */
+	.admin-content .input-group > :last-child {
+		margin-bottom: 0;
+	}
+}
+/* --- END: 新增 800px 响应式布局 --- */
