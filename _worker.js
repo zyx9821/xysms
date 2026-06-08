@@ -1,21 +1,39 @@
+// 辅助函数：从 D1 数据库获取配置值
+async function getSystemSetting(db, key, defaultValue) {
+  try {
+    const result = await db.prepare("SELECT value FROM system_settings WHERE key = ?").bind(key).first();
+    return result ? result.value : defaultValue;
+  } catch (e) {
+    return defaultValue;
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
     
-    // 设定系统时区，确保后台列表和 API 返回的时间一致
-    const timeZone = env.TIMEZONE || 'Asia/Shanghai'; 
+    // 确保 D1 数据库已绑定
+    if (!env.db) {
+      return new Response("Database binding 'db' is missing.", { status: 500 });
+    }
 
-    // 1. 静态资源与页面路由交由 Pages 处理
+    // 静态资源与页面路由交由 Pages 处理
     if (path.startsWith('/assets/') || path.endsWith('.html')) {
       return env.ASSETS.fetch(request);
     }
 
-    // 2. 管理员登录接口 (通过环境变量验证)
+    // ==================== 管理员权限与登录 ====================
+    
+    // 1. 管理员登录接口（从 D1 数据库实时读取账号密码）
     if (path === '/api/admin/login' && request.method === 'POST') {
       const { username, password } = await request.json();
-      if (username === env.ADMIN_USER && password === env.ADMIN_PASS) {
-        // 实际应用中建议生成并返回 JWT 或 Session Token
+      
+      const dbUser = await getSystemSetting(env.db, 'ADMIN_USER', 'admin');
+      const dbPass = await getSystemSetting(env.db, 'ADMIN_PASS', 'admin123');
+
+      if (username === dbUser && password === dbPass) {
+        // 返回成功状态（此处可扩展 Session 或 Token 机制）
         return new Response(JSON.stringify({ success: true, token: "admin_authorized" }), {
           headers: { 'Content-Type': 'application/json' }
         });
@@ -23,24 +41,44 @@ export default {
       return new Response(JSON.stringify({ success: false, msg: "账号或密码错误" }), { status: 401 });
     }
 
-    // 3. 管理员获取接口配置列表
-    if (path === '/api/admin/configs' && request.method === 'GET') {
-      // 此处应有鉴权逻辑验证 token
-      const { results } = await env.db.prepare("SELECT * FROM api_configs").all();
-      return new Response(JSON.stringify({ success: true, data: results }), {
+    // 2. 获取系统配置（用于后台配置页面回显）
+    if (path === '/api/admin/settings' && request.method === 'GET') {
+      const { results } = await env.db.prepare("SELECT key, value FROM system_settings").all();
+      // 转换成对象格式方便前端使用
+      const settings = {};
+      results.forEach(row => { settings[row.key] = row.value; });
+      
+      return new Response(JSON.stringify({ success: true, data: settings }), {
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // 4. 用户接码核心逻辑 (对接第三方API)
-    if (path === '/api/user/get_phone' && request.method === 'POST') {
-      // a. 验证用户 Token 及余额
-      // b. 从 db 查询 is_active = 1 的 api_configs
-      // c. 向第三方接口发起 fetch 请求获取手机号
-      // d. 将获取到的手机号写入 sms_orders 表
-      // e. 返回当前系统时区的时间与手机号
+    // 3. 修改系统配置（在后台提交修改）
+    if (path === '/api/admin/settings' && request.method === 'POST') {
+      const { ADMIN_USER, ADMIN_PASS, TIMEZONE } = await request.json();
       
+      // 使用事务或批量执行更新数据库
+      await env.db.batch([
+        env.db.prepare("UPDATE system_settings SET value = ? WHERE key = 'ADMIN_USER'").bind(ADMIN_USER),
+        env.db.prepare("UPDATE system_settings SET value = ? WHERE key = 'ADMIN_PASS'").bind(ADMIN_PASS),
+        env.db.prepare("UPDATE system_settings SET value = ? WHERE key = 'TIMEZONE'").bind(TIMEZONE)
+      ]);
+
+      return new Response(JSON.stringify({ success: true, msg: "系统配置更新成功" }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // ==================== 接码与时区处理 ====================
+
+    // 4. 用户接码核心逻辑示例
+    if (path === '/api/user/get_phone' && request.method === 'POST') {
+      // 从 D1 数据库动态获取时区设置，确保输出时间与系统设置完全同步
+      const timeZone = await getSystemSetting(env.db, 'TIMEZONE', 'Asia/Shanghai');
       const currentTime = new Date().toLocaleString('zh-CN', { timeZone });
+      
+      // 执行接码并记录到 sms_orders 的业务逻辑...
+      
       return new Response(JSON.stringify({ 
           success: true, 
           phone: "13800138000", 
@@ -48,7 +86,6 @@ export default {
       }), { headers: { 'Content-Type': 'application/json' } });
     }
 
-    // 默认返回主页或让 Pages 继续处理
     return env.ASSETS.fetch(request);
   }
 };
