@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>用户控制台 - 接码系统</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script>
+        if (!localStorage.getItem('userToken')) {
+            window.location.href = '/user/login.html';
+        }
+    </script>
+</head>
+<body>
+
+<div id="admin-container" class="admin-container" style="display:flex;">
+    <div class="admin-mobile-header">
+        <div class="mobile-logo"><span>用户中心</span></div>
+        <button id="mobile-menu-toggle" class="btn btn-default"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="admin-overlay"></div>
+    <div class="admin-sidebar">
+        <div class="sidebar-header"><a href="#">用户控制台</a></div>
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a data-toggle="tab" href="#get-code"><i class="fas fa-fw fa-mobile-alt"></i> 接码大厅</a></li>
+            <li><a data-toggle="tab" href="#order-history"><i class="fas fa-fw fa-list-alt"></i> 我的记录</a></li>
+            <li><a href="#" id="user-logout"><i class="fas fa-fw fa-sign-out-alt"></i> 安全退出</a></li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="get-code">
+                <div class="container-fluid">
+                    <h3 style="margin-top: 15px; margin-bottom: 20px;">获取手机验证码</h3>
+                    <div class="panel panel-primary">
+                        <div class="panel-body text-center" style="padding: 40px 20px;">
+                            <div class="form-group" style="max-width: 300px; margin: 0 auto 20px;">
+                                <select class="form-control" id="platform-select">
+                                    <option value="telegram">Telegram (演示)</option>
+                                    <option value="whatsapp">WhatsApp (演示)</option>
+                                </select>
+                            </div>
+                            <h2 id="display-phone" style="letter-spacing: 2px; color: #337ab7; margin-bottom: 20px;">等待获取手机号...</h2>
+                            <button class="btn btn-lg btn-success" id="btn-get-phone" onclick="getPhone()">
+                                <i class="fas fa-sim-card"></i> 申请手机号
+                            </button>
+                        </div>
+                        <div class="panel-footer" style="background: #fcf8e3; color: #8a6d3b;">
+                            <i class="fas fa-info-circle"></i> 系统时间已由后台设定时区同步。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="order-history">
+                <div class="container-fluid">
+                    <h3 style="margin-top: 15px; margin-bottom: 20px;">接码历史记录</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>时间</th>
+                                    <th>手机号</th>
+                                    <th>验证码</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026-06-07 22:15:00</td>
+                                    <td>+1 3800138000</td>
+                                    <td><strong style="color:red;">889922</strong></td>
+                                    <td><span class="label label-success">完成</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#mobile-menu-toggle').click(function() {
+            $('.admin-sidebar').toggleClass('is-visible');
+            $('.admin-overlay').toggleClass('is-visible');
+        });
+        $('.admin-overlay').click(function() {
+            $('.admin-sidebar').removeClass('is-visible');
+            $('.admin-overlay').removeClass('is-visible');
+        });
+
+        $('#user-logout').click(function(e) {
+            e.preventDefault();
+            localStorage.removeItem('userToken');
+            window.location.href = '/user/login.html';
+        });
+    });
+
+    function getPhone() {
+        $('#btn-get-phone').prop('disabled', true).text('正在请求中...');
+        
+        // 调用之前我们在 Worker 中写好的测试接口
+        $.ajax({
+            url: '/api/user/get_phone',
+            type: 'POST',
+            success: function(res) {
+                if (res.success) {
+                    $('#display-phone').text(res.phone);
+                    $('#btn-get-phone').html('<i class="fas fa-sync fa-spin"></i> 等待验证码...').removeClass('btn-success').addClass('btn-warning');
+                    alert(`成功分配手机号，当前系统时间: ${res.time}`);
+                }
+            },
+            complete: function() {
+                // 仅用于演示
+                setTimeout(() => {
+                    $('#btn-get-phone').prop('disabled', false).html('<i class="fas fa-sim-card"></i> 申请手机号').removeClass('btn-warning').addClass('btn-success');
+                }, 3000);
+            }
+        });
+    }
+</script>
+</body>
+</html>
